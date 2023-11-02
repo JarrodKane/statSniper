@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 
+// This is calling the steam api for user info
+
 export const getPlayerStats = async (req: Request, res: Response) => {
   const { steamId } = req.params;
   const apiKey = process.env.STEAM_API_KEY;
