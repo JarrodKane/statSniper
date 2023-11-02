@@ -17,15 +17,15 @@ const db = new sqlite3.Database('sniper.db');
 db.run(`
   CREATE TABLE IF NOT EXISTS user (
     id INTEGER PRIMARY KEY,
-    name TEXT
+    name TEXT UNIQUE
   )
 `);
 
 db.run(`
   CREATE TABLE IF NOT EXISTS provider (
     id INTEGER PRIMARY KEY,
-    name TEXT,
-    url TEXT
+    name TEXT UNIQUE,
+    url TEXT UNIQUE
   )
 `);
 
@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS user_provider (
 db.run(`
   CREATE TABLE IF NOT EXISTS game (
     id INTEGER PRIMARY KEY,
+    app_id INTEGER UNIQUE,
     provider_id INTEGER,
     name TEXT,
     release_date DATE,
