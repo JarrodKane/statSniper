@@ -120,7 +120,6 @@ export const checkIfGameExists = async (appId: string) => {
         console.error('Error getting users:', err);
         reject('Error getting users');
       } else {
-        console.log('Users retrieved from the database');
         resolve(rows);
       }
     });
@@ -136,7 +135,7 @@ export const insertGame = async (
 ): Promise<string> => {
   return new Promise((resolve, reject) => {
     db.run(
-      'INSERT INTO game (app_id, providerId, name, releaseDate, image) VALUES (?, ?, ?, ?, ?)',
+      'INSERT OR IGNORE INTO game (app_id, provider_Id, name, release_date, image) VALUES (?, ?, ?, ?, ?)',
       [appId, providerId, name, releaseDate, image],
       (err) => {
         if (err) {
@@ -187,7 +186,6 @@ export const getAllUserProviders = async () => {
   return new Promise((resolve, reject) => {
     db.all('SELECT * FROM user_provider', [], (err, rows) => {
       if (err) {
-        console.log('WATR');
         console.error('Error getting users:', err);
         reject('Error getting users');
       } else {

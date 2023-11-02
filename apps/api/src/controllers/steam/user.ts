@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 import { checkIfGameExists } from '../../database/dbQueries';
-import { GameController } from './game';
+import { GameController } from '../steam/game';
 
 // This is calling the steam api for user info
 
@@ -21,7 +21,6 @@ export const getPlayerStats = async (req: Request, res: Response) => {
 
 export const getOwnedGames = async (steamId: string) => {
   const apiKey = process.env.STEAM_API_KEY;
-  console.log('HEHEHEHEH');
 
   const url = `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId}&include_appinfo=true&format=json`;
 
@@ -35,9 +34,12 @@ export const getOwnedGames = async (steamId: string) => {
 
     for (const game of response.data.response.games) {
       const gameInDB = await checkIfGameExists(game.appid);
-      if (!gameInDB) {
-        console.log('NO GAMEW');
+
+      if (!gameInDB || gameInDB.length === 0) {
+        console.log('NO GAME');
         const gameData = await GameController.getGame(game.appid);
+      } else {
+        console.log('We got the game');
       }
     }
 

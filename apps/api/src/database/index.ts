@@ -12,7 +12,10 @@
 
 import sqlite3 from 'sqlite3';
 
-const db = new sqlite3.Database('sniper.db');
+const db = new sqlite3.Database(
+  'sniper.db',
+  sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE
+);
 
 db.run(`
   CREATE TABLE IF NOT EXISTS user (

@@ -18,18 +18,12 @@ const userController = {
       // const userGames = await getAllGamesForUser(Number(userIdPart));
 
       await userController.updateUser(userIdPart);
-      res.status(200).json({ message: 'User updated' });
+      res.status(200).json({ message: 'User details by Id' });
       // res.status(200).json({ userGames });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'An error occurred' });
     }
-
-    // We check if there's any information first in the database
-
-    // Then if there is not, we go to fetch the information from the provider
-    // store that data
-    // return data from the database
   },
 
   // Function to create a new user
