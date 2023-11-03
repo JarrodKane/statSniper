@@ -24,24 +24,19 @@ export const getPlayerStats = async (req: Request, res: Response) => {
   }
 };
 
-//
-
 /**
  * Fetches and returns the games owned by a specific Steam user.
  *
  * This function fetches the list of games owned by the user from the Steam API,
  * then for each game, it fetches additional data such as the release date.
- * The results are cached for 30 minutes to reduce the number of API calls.
  *
  * Note: This function could be improved by storing the user's games in a database,
  * which would eliminate the need to fetch and calculate the data each time.
- * - See TODO: StoringData
  *
  * @param {number} steamId - The Steam ID of the user.
  * @returns {Promise<Types.UserGameData[]>} - A promise that resolves to an array of games owned by the user.
  *
  */
-
 export const getOwnedGames = async (steamId: number) => {
   const apiKey = process.env.STEAM_API_KEY;
 
@@ -49,7 +44,7 @@ export const getOwnedGames = async (steamId: number) => {
 
   try {
     const response = await axios.get<Types.SteamOwnedGamesData>(url);
-    // TODO: StoringData
+
     if (response.data.response.game_count === 0) {
       console.error('No games found for that user');
       return [];
@@ -78,7 +73,6 @@ export const getOwnedGames = async (steamId: number) => {
       }
       gameList.push(currentGame);
     }
-
     return gameList;
   } catch (error) {
     console.error(error);
