@@ -1,81 +1,58 @@
-# Turborepo starter
+# Stat Sniper
 
-This is an official starter Turborepo.
+Stat Sniper is a web application that allows users to sign into Steam and view their game stats. It is built using [Turborepo](https://turborepo.org/) in order to start a monorepo.
 
-## Using this example
+## Project Structure
 
-Run the following command:
+The project is structured as follows:
+├── apps
+│ ├── api
+│ └── web
+├── packages
+│ ├── ui
+│ ├── eslint-config-custom
+│ └── tsconfig
+└── README.md
+
+This project includes the following applications:
+
+### API
+
+- An Express application that serves as the backend for our project. It communicates with the Steam API to fetch user game stats.
+- It uses a simple sqlite database to store user data.
+- Nodecache is used to cache user data for 30 mins.
+
+### Web
+
+A React Vite application that serves as the frontend for our project
+
+- [shadcn](https://ui.shadcn.com) for component styling.
+- React Vite for development server and bundling.
+
+Both applications are written in [TypeScript](https://www.typescriptlang.org/) for static type checking.
+
+## Utilities
+
+This project uses several tools to help with development:
+
+- [TypeScript](https://www.typescriptlang.org/) for static type checking.
+- [ESLint](https://eslint.org/) for code linting.
+- [Prettier](https://prettier.io) for code formatting.
+
+## Running the Project
+
+Developing the Project
+To start development servers for all applications, navigate to the root directory of the project and run the following command:
 
 ```sh
-npx create-turbo@latest
-```
-
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `API`: a Express app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
+pnpm install
 pnpm dev
 ```
 
-### Remote Caching
+## Building the Project
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+To build all applications, navigate to the root directory of the project and run the following command:
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
+```sh
+pnpm build
 ```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
