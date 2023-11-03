@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import SteamAuth from 'node-steam-openid';
-import { insertProvider, insertUserProvider } from '../../database/dbQueries';
+import { insertUserProvider } from '../../database/dbQueries';
 
 // Using https://www.npmjs.com/package/node-steam-openid to get the openid
 // https://openid.net/certified-open-id-developer-tools/
@@ -28,10 +28,13 @@ export const redirect = async (req: Request, res: Response) => {
     const userId = 1;
     const providerId = 1;
 
-    // await insertUser(userName);
-    await insertProvider('steam', 'steam.com');
-
-    await insertUserProvider(userId, providerId, steamid, username, avatar);
+    await insertUserProvider({
+      user_id: userId,
+      provider_id: providerId,
+      unique_Id: Number(steamid),
+      name: username,
+      avatar: avatar.medium,
+    });
 
     res.json(user);
   } catch (error) {

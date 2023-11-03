@@ -11,6 +11,7 @@
  */
 
 import sqlite3 from 'sqlite3';
+import { insertProvider } from './dbQueries';
 
 const db = new sqlite3.Database(
   'sniper.db',
@@ -24,13 +25,23 @@ db.run(`
   )
 `);
 
-db.run(`
+//  TODO: This is a bit of a hack, I'm just inserting the provider here, since it's the only one I'm using right now.
+db.run(
+  `
   CREATE TABLE IF NOT EXISTS provider (
     id INTEGER PRIMARY KEY,
     name TEXT UNIQUE,
     url TEXT UNIQUE
   )
-`);
+`,
+  (err) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      insertProvider({ name: 'steam', url: 'steam.com' }).catch(console.error);
+    }
+  }
+);
 
 // This is needed for when a user signs into a provider, we just want to say that they belong to that provider.
 // They might have a uniqueId for that provider, but we don't want to store that in the user table.
@@ -62,6 +73,7 @@ db.run(`
   )
 `);
 
+// TODO: This would be good to use, but right now we are not storing the users data, we reach for it each time unless it is in cache
 db.run(`
   CREATE TABLE IF NOT EXISTS user_game (
     id INTEGER PRIMARY KEY,

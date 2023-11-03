@@ -1,11 +1,18 @@
+/**
+ * This file was originally intended to fetch every single app from the Steam API.
+ * However, due to the large size of the app list, this approach was deemed excessive for this small project.
+ * While it's certainly doable, it would require handling rate limiting, which would take more time than is reasonable for a test.
+ * Therefore, this approach has been abandoned, but it has potential for future development.
+ * I'm just getting the games each time a player signs in for now.
+ * This is not ideal as it means we have to make a call to the Steam API each time, but it's good enough for now.
+ *
+ * Here are the two different endpoints to hit for apps, I think the first one is better because you can add in more arguments and limit the amount you get in one hit
+ * `https://api.steampowered.com/IStoreService/GetAppList/v1/?key=${apiKey}&include_games=true`
+ * 'https://api.steampowered.com/ISteamApps/GetAppList/v2/'
+ */
+
 import axios from 'axios';
 import db from '../database';
-
-// Originally thought that we could get all of the apps on steam and then get the details for each one.
-// It's doable but I felt it's a little out of scope for this test, so I'm just going to get the details for the games that the user owns.
-
-// `https://api.steampowered.com/IStoreService/GetAppList/v1/?key=${apiKey}&include_games=true`
-// 'https://api.steampowered.com/ISteamApps/GetAppList/v2/'
 
 // const STEAM_APP_LIST_URL = `https://api.steampowered.com/IStoreService/GetAppList/v1/?key=${apiKey}&include_games=true`;
 
@@ -141,7 +148,6 @@ interface SteamAppDetailsResponse {
 
 async function fetchSteamAppList(): Promise<SteamApp[]> {
   const apiKey = process.env.STEAM_API_KEY;
-  console.log(apiKey);
   const response = await axios.get(
     `https://api.steampowered.com/IStoreService/GetAppList/v1/?key=${apiKey}&include_games=true&include_dlc=true&max_results=50000`
   );
