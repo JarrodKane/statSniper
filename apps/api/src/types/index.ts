@@ -43,6 +43,13 @@ export type UserGameData = SteamGameUserData & {
   release_date?: string;
 };
 
+export type UserGameStats = {
+  [key: string]: {
+    totalPlayTime: number;
+    games: UserGameData[];
+  };
+};
+
 export type UserProviderData = {
   id: number;
   user_id: number;

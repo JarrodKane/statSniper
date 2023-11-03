@@ -35,7 +35,7 @@ const userController = {
 
     try {
       const usersGames = await userController.updateUser(Number(userIdPart));
-      usersCache.set(cacheKey, usersGames, 120);
+      // usersCache.set(cacheKey, usersGames, 120);
       res.status(200).json(usersGames);
     } catch (error) {
       console.error(error);
@@ -56,7 +56,9 @@ const userController = {
 
   updateUser: async (userId: number) => {
     const providers = await getUserProviders(userId);
-    const games: Record<string, Types.UserGameData[]> = { steam: [] };
+    const games: Types.UserGameStats = {
+      steam: { totalPlayTime: 0, games: [] },
+    };
 
     if (providers.length > 0) {
       await Promise.all(
@@ -66,7 +68,9 @@ const userController = {
               const steamGames = await steam.user.getOwnedGames(
                 provider.unique_Id
               );
-              games.steam = steamGames;
+              if (steamGames && 'games' in steamGames) {
+                games[PROVIDERS_DICTIONARY[provider.provider_id]] = steamGames;
+              }
             } catch (error) {
               console.error(error);
             }

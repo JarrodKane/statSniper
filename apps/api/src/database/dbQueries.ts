@@ -22,7 +22,7 @@ export const insertProvider = async (
 
   return new Promise((resolve, reject) => {
     db.run(
-      'INSERT INTO provider (name, url) VALUES (?, ?)',
+      'INSERT OR IGNORE INTO provider (name, url) VALUES (?, ?)',
       [name, url],
       (err) => {
         if (err) {

@@ -34,7 +34,7 @@ export const getPlayerStats = async (req: Request, res: Response) => {
  * which would eliminate the need to fetch and calculate the data each time.
  *
  * @param {number} steamId - The Steam ID of the user.
- * @returns {Promise<Types.UserGameData[]>} - A promise that resolves to an array of games owned by the user.
+ * @returns {Promise<{steam: Types.UserGameStats}>} - A Promise that resolves to an object with a key of "steam" and a value of type `Types.UserGameStats`.
  *
  */
 export const getOwnedGames = async (steamId: number) => {
@@ -45,14 +45,19 @@ export const getOwnedGames = async (steamId: number) => {
   try {
     const response = await axios.get<Types.SteamOwnedGamesData>(url);
 
-    if (response.data.response.game_count === 0) {
+    if (
+      response.data.response.game_count === 0 ||
+      !response.data.response.games
+    ) {
       console.error('No games found for that user');
       return [];
     }
-    const games = response.data.response;
 
+    const usersOwnedGames = response.data.response;
     const gameList = [];
-    for (const game of games.games) {
+    let totalPlayTime = 0;
+
+    for (const game of usersOwnedGames.games) {
       const currentGame: Types.UserGameData = game;
       // This is getting additional data on games like release date
       const gameData: Types.GameData[] = await getGameByAppId(game.appid);
@@ -69,11 +74,15 @@ export const getOwnedGames = async (steamId: number) => {
           console.error('No data could be retrieved for that game');
         }
       } else {
-        currentGame.release_date = gameData[0].release_date;
+        if ('release_date' in gameData[0] && gameData[0].release_date) {
+          currentGame.release_date = gameData[0].release_date;
+        }
       }
+      totalPlayTime += game?.playtime_forever || 0;
       gameList.push(currentGame);
     }
-    return gameList;
+    const stats = { totalPlayTime, games: gameList };
+    return stats;
   } catch (error) {
     console.error(error);
     return [];
