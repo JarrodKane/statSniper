@@ -1,25 +1,32 @@
 
+import { ProfileForm } from "@/components/ProfileForm";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
+
 
 const Home = () => {
   return (
-    <div>
-      <header>
-        <nav>
-          <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
-          </ul>
-        </nav>
-      </header>
-      <main className="shadcn">
-        <h1>Welcome to my website!</h1>
-        <p>Here's some content for the main section of the page.</p>
-      </main>
-      <footer>
-        <p>&copy; 2021 My Website</p>
-      </footer>
-    </div>
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>Search for Steam Stats</CardTitle>
+          <CardDescription>
+            <p>Enter your Steam ID to search for your stats</p>
+            <a className='underline' href="https://help.steampowered.com/en/faqs/view/2816-BE67-5B69-0FEC" target="_blank" rel="noopener noreferrer">How to find your Steam ID</a>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ProfileForm />
+        </CardContent>
+      </Card>
+
+
+    </>
   );
 };
 
