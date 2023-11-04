@@ -9,16 +9,19 @@ import {
 } from "@/components/ui/card";
 import { BASE_URL } from "@/constants";
 import { useState } from "react";
+// import GameTable from "../components/GameTable";
 
 
 const Home = () => {
 
   const [loading, setLoading] = useState(false)
+  // const [gameData, setGameData] = useState({})
+
 
   const handleSubmitSteamId = async (steamId: string) => {
     try {
       setLoading(true)
-      const data = await fetch(`${BASE_URL}/user/create`, {
+      const response = await fetch(`${BASE_URL}/user/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -26,19 +29,16 @@ const Home = () => {
         body: JSON.stringify({ steamId })
       })
 
-      const json = await data.json()
-      console.log(json)
+      await response.json()
+      // setGameData(data)
     } catch (error) {
+      // setGameData({})
       console.error(error)
     } finally {
       setLoading(false)
     }
     // TODO: Handle errors, and handle success
   }
-
-
-
-
 
   return (
     <>
@@ -56,8 +56,7 @@ const Home = () => {
           <ProfileForm callBack={handleSubmitSteamId} loading={loading} />
         </CardContent>
       </Card>
-
-
+      {/* <GameTable games={gameData} /> */}
     </>
   );
 };

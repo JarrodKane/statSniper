@@ -41,10 +41,10 @@ const userController = {
     try {
       const usersGames = await userController.updateUser(userIdPart);
       usersCache.set(cacheKey, usersGames, 120);
-      res.status(200).json(usersGames);
+      return res.status(200).json(usersGames);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred' });
+      return res.status(500).json({ error: 'An error occurred' });
     }
   },
 
@@ -58,7 +58,7 @@ const userController = {
     if (usersCache) {
       const cachedUser = usersCache.get<Types.UserGameData[]>(cacheKey);
       if (cachedUser) {
-        res.status(200).json(cachedUser);
+        return res.status(200).json(cachedUser);
       }
     }
 
@@ -76,15 +76,15 @@ const userController = {
       });
 
       if (!insertSteamProvider) {
-        res.status(500).json({ error: 'Error inserting user provider data' });
+        console.error('Error inserting user provider data');
       }
 
       const usersGames = await userController.updateUser(steamId);
       usersCache.set(cacheKey, usersGames, 120);
-      res.status(200).json(usersGames);
+      return res.status(200).json(usersGames);
     } catch (e) {
       console.error(e);
-      res.status(500).json({ error: 'An error occurred' });
+      return res.status(500).json({ error: 'An error occurred' });
     }
   },
 

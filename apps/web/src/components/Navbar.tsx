@@ -9,9 +9,6 @@ const NavBar = () => {
         <div className='mr-6 flex items-center space-x-2  text-lg'>
           <Link to='/' className='hover:text-primary'>Stat Sniper</Link>
         </div>
-        <nav className='flex items-center space-x-6 text-sm font-medium'>
-          <Link to='/login' className='transition-colors hover:text-foreground/80 text-foreground/60'>Login</Link>
-        </nav>
       </div>
     </header>
   );
