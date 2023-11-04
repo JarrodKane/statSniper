@@ -46,7 +46,7 @@ export const insertUserProvider = async (
   return new Promise((resolve, reject) => {
     const { user_id, provider_id, unique_Id, name, avatar } = userProviderData;
     db.run(
-      'INSERT OR IGNORE INTO INTO user_provider (user_id, provider_id, unique_Id, name, avatar) VALUES (?, ?, ?, ?, ?)',
+      'INSERT OR IGNORE INTO  user_provider (user_id, provider_id, unique_Id, name, avatar) VALUES (?, ?, ?, ?, ?)',
       [user_id, provider_id, unique_Id, name, avatar],
       (err) => {
         if (err) {
@@ -61,7 +61,7 @@ export const insertUserProvider = async (
 };
 
 export const getUserProviders = async (
-  userId: number
+  userId: string
 ): Promise<Types.UserProviderData[]> => {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -119,5 +119,19 @@ export const insertGame = async (
         }
       }
     );
+  });
+};
+
+// Super quick drop table function for testing etc
+export const dropTable = async (tableName: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    db.run(`DROP TABLE ${tableName}`, (err) => {
+      if (err) {
+        console.error('Error dropping table:', err);
+        reject('Error dropping table');
+      } else {
+        resolve('Table dropped');
+      }
+    });
   });
 };

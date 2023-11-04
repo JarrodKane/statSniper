@@ -37,7 +37,7 @@ export const getPlayerStats = async (req: Request, res: Response) => {
  * @returns {Promise<{steam: Types.UserGameStats}>} - A Promise that resolves to an object with a key of "steam" and a value of type `Types.UserGameStats`.
  *
  */
-export const getOwnedGames = async (steamId: number) => {
+export const getOwnedGames = async (steamId: string) => {
   const apiKey = process.env.STEAM_API_KEY;
 
   const url = `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId}&include_appinfo=true&format=json`;

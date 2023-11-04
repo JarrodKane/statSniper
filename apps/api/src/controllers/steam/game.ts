@@ -25,6 +25,9 @@ export const GameController = {
    * @returns {Promise<GameResult>} - A promise that resolves to the game data or an error object.
    * @memberof GameController
    */
+
+  // TODO: Figure out how to avoid rate limiting, could turn this into a closure and add in a wait once we hit it or after every 50
+  // Core issue is that we need to have the games in our own database first, calling a 3rd party api will always be slow
   async getGame(appId: number): Promise<GameResult> {
     try {
       const response = await axios.get<Types.SteamAppDetailsResponse>(
@@ -41,6 +44,7 @@ export const GameController = {
             release_date: gameData?.release_date.date || '',
             image: gameData?.header_image || '',
           });
+          console.log('Game inserted into database');
           return gameData;
         }
       } catch (error) {

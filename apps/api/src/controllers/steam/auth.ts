@@ -25,13 +25,12 @@ export const redirect = async (req: Request, res: Response) => {
     const { steamid, username, avatar } = user;
 
     // TODO: change out the hard codded 1 for the user id, this should be stored in the browser once they sign in
-    const userId = 1;
     const providerId = 1;
 
     await insertUserProvider({
-      user_id: userId,
+      user_id: steamid,
       provider_id: providerId,
-      unique_Id: Number(steamid),
+      unique_Id: steamid,
       name: username,
       avatar: avatar.medium,
     });

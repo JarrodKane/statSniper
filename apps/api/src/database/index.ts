@@ -48,12 +48,12 @@ db.run(
 db.run(`
 CREATE TABLE IF NOT EXISTS user_provider (
   id INTEGER PRIMARY KEY,
-  user_id INTEGER,
+  user_id TEXT,
   provider_id INTEGER,
-  unique_Id TEXT,
+  unique_Id TEXT UNIQUE,
   name TEXT,
   avatar TEXT,
-  FOREIGN KEY (user_id) REFERENCES user(id),
+  FOREIGN KEY (user_id) REFERENCES user(name),
   FOREIGN KEY (provider_id) REFERENCES provider(id)
 )
 `);
@@ -77,10 +77,10 @@ db.run(`
 db.run(`
   CREATE TABLE IF NOT EXISTS user_game (
     id INTEGER PRIMARY KEY,
-    user_id INTEGER,
+    user_id TEXT,
     game_id INTEGER,
     hours_played INTEGER,
-    FOREIGN KEY (user_id) REFERENCES user(id),
+    FOREIGN KEY (user_id) REFERENCES user(name),
     FOREIGN KEY (game_id) REFERENCES game(id)
   )
 `);

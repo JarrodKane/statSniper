@@ -52,9 +52,9 @@ export type UserGameStats = {
 
 export type UserProviderData = {
   id: number;
-  user_id: number;
+  user_id: string;
   provider_id: number;
-  unique_Id: number;
+  unique_Id: string;
   name: string;
   avatar: string;
 };
