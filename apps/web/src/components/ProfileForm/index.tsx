@@ -23,6 +23,18 @@ const formSchema = z.object({
   })
 })
 
+const handleSubmitSteamId = async (steamId: string) => {
+  const data = await fetch(`${BASE_URL}/user/create`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ steamId })
+  })
+
+  // TODO: Handle errors, and handle success
+}
+
 /**
  * `ProfileForm` is a component that renders a form for updating a user's profile.
  * This form includes a single field for the steamId, which must be at least 17 digits long.
@@ -51,15 +63,7 @@ export function ProfileForm() {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    fetch(`${BASE_URL}/user/create`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(values)
-    })
-
-    console.log(values)
+    handleSubmitSteamId(values.steamId)
   }
 
   return (

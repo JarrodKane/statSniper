@@ -45,8 +45,8 @@ const userController = {
 
   createUser: async (req: Request, res: Response) => {
     try {
-      const { userName } = req.body;
-      await insertUser(userName);
+      const { steamId } = req.body;
+      await insertUser(steamId);
       res.status(200).json({ message: 'User created' });
     } catch (e) {
       console.error(e);
