@@ -46,12 +46,22 @@ export const GameController = {
           });
           console.log('Game inserted into database');
           return gameData;
+        } else {
+          // Steam has apps that have no data, we still want to insert them into the database so we don't call them again
+          insertGame({
+            app_id: appId,
+            provider_id: 1,
+            name: '',
+            release_date: '',
+            image: '',
+          });
+
+          return gameData;
         }
       } catch (error) {
         console.error(error);
         return { error: 'No Data' };
       }
-      return { error: 'No Data' };
     } catch (error) {
       console.error(error);
       return { error: 'No Data' };

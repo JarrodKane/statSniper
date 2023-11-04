@@ -66,7 +66,7 @@ export const getOwnedGames = async (steamId: string) => {
         try {
           const appData = await GameController.getGame(game.appid);
           if ('error' in appData) {
-            // We just want to skip any apps that have no data for now
+            // If there is no data for the game, we still want to add it to the database so we don't call it again
           } else if ('release_date' in appData) {
             currentGame.release_date = appData.release_date.date || '';
           }

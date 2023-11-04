@@ -1,6 +1,4 @@
-// "use client"
-
-import { BASE_URL } from "@/constants"
+"use client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -17,23 +15,17 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
+
+interface ProfileFormProps {
+  callBack: (steamId: string) => void;
+  loading: boolean;
+}
+
 const formSchema = z.object({
   steamId: z.string().regex(/^[0-9]{17}$/, {
     message: "Steam ID must be 17 digits.",
   })
 })
-
-const handleSubmitSteamId = async (steamId: string) => {
-  const data = await fetch(`${BASE_URL}/user/create`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ steamId })
-  })
-
-  // TODO: Handle errors, and handle success
-}
 
 /**
  * `ProfileForm` is a component that renders a form for updating a user's profile.
@@ -53,7 +45,8 @@ const handleSubmitSteamId = async (steamId: string) => {
  * 
  * @see {@link https://ui.shadcn.com/docs/components/form} for more information on the used form components.
  */
-export function ProfileForm() {
+export function ProfileForm({ callBack, loading }: ProfileFormProps) {
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,30 +56,30 @@ export function ProfileForm() {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    handleSubmitSteamId(values.steamId)
+    callBack(values.steamId)
   }
 
   return (
-    <Form {...form}>
+    <Form  {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
         <FormField
           control={form.control}
           name="steamId"
           render={({ field }) => (
-            <FormItem>
+            <FormItem >
               <FormLabel>SteamId</FormLabel>
               <FormControl>
-                <Input placeholder="12345678901234567" {...field} />
+                <Input disabled={loading} placeholder="12345678901234567" {...field} />
               </FormControl>
               <FormDescription>
-                <p>Your steam ID is 17 digits</p>
+                Your steam ID is 17 digits
               </FormDescription>
               <FormMessage />
             </FormItem>
 
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button disabled={loading} type="submit">Submit</Button>
       </form>
     </Form>
   )
