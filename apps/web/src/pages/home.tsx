@@ -9,13 +9,15 @@ import {
 } from "@/components/ui/card";
 import { BASE_URL } from "@/constants";
 import { useState } from "react";
-// import GameTable from "../components/GameTable";
+import { UserGameStats } from 'shared-types';
+import GameTable from "../components/GameTable";
+
 
 
 const Home = () => {
 
   const [loading, setLoading] = useState(false)
-  // const [gameData, setGameData] = useState({})
+  const [gameData, setGameData] = useState<UserGameStats>({})
 
 
   const handleSubmitSteamId = async (steamId: string) => {
@@ -29,10 +31,10 @@ const Home = () => {
         body: JSON.stringify({ steamId })
       })
 
-      await response.json()
-      // setGameData(data)
+      const data: UserGameStats = await response.json()
+      setGameData(data)
     } catch (error) {
-      // setGameData({})
+      setGameData({})
       console.error(error)
     } finally {
       setLoading(false)
@@ -56,7 +58,7 @@ const Home = () => {
           <ProfileForm callBack={handleSubmitSteamId} loading={loading} />
         </CardContent>
       </Card>
-      {/* <GameTable games={gameData} /> */}
+      <GameTable gamesData={gameData} loading={loading} />
     </>
   );
 };
