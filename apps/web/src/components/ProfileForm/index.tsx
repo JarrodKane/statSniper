@@ -1,9 +1,10 @@
 "use client"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { debounce } from 'lodash';
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,8 +13,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 
 interface ProfileFormProps {
@@ -55,13 +56,15 @@ export function ProfileForm({ callBack, loading }: ProfileFormProps) {
     },
   })
 
+  const debouncedOnSubmit = debounce(onSubmit, 300);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     callBack(values.steamId)
   }
 
   return (
     <Form  {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+      <form onSubmit={form.handleSubmit(debouncedOnSubmit)} className="space-y-3">
         <FormField
           control={form.control}
           name="steamId"

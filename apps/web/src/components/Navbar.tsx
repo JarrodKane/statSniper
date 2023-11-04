@@ -1,5 +1,6 @@
 
 import { Link } from 'react-router-dom';
+import { ModeToggle } from './ThemeProvider/themeChanger';
 
 
 const NavBar = () => {
@@ -9,6 +10,7 @@ const NavBar = () => {
         <div className='mr-6 flex items-center space-x-2  text-lg'>
           <Link to='/' className='hover:text-primary'>Stat Sniper</Link>
         </div>
+        <ModeToggle />
       </div>
     </header>
   );
