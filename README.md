@@ -17,13 +17,29 @@ This project includes the following applications:
 
 ### API
 
+This is a small express application that serves as the backend for our project. It communicates with the Steam API to fetch user game stats.
+It's storing the games, and users in a sqlite database.
+
+Right now it's going to have issues with getting additional data for the apps. This is due to the rate limiting on the steam api.
+Ideally we would import a list of apps so that we can store the data we want in our database. This would allow us to get the data we want without having to make additional calls to the steam api.
+We will also need to set the time for when to get updates, as currently if a game exists we don't update it. This is because we don't want to hit the rate limit.
+
+We could also have lots of improvements by storing the users_games so that we don't need to do so many db calls.
+
 - An Express application that serves as the backend for our project. It communicates with the Steam API to fetch user game stats.
-- It uses a simple sqlite database to store user data.
+- It uses a simple sqlite database to store user data. (This is not ideal and should be replaced with a better database, if we want to scale this project)
 - Node cache is used to cache user data for 30 mins.
+
+#### Postman
+
+I've added in an export of my postman collection for the API. You can import it into postman and use it to test the API.
 
 ### Web
 
-A React Vite application that serves as the frontend for our project
+A React Vite application that serves as the frontend for our project.
+This is a single page application, originally I had planned to include multiple pages with the ability to use the steam login but I wanted to focus on the MVP.
+I've used shadcn because I wanted to use a UI library that I haven't used before and tailwindscss works with it.
+I've tried to keep the components basic and reusable.
 
 - [shadcn](https://ui.shadcn.com) for component styling
 - React Vite for development server and bundling
@@ -67,10 +83,22 @@ pnpm build
 
 - [ ] tests fe
 - [ ] tests be
-- [ ] API documentation
+- [x] Postman
 - [ ] Codegen
 - [x] API MVP
   - [ ] Cache
   - [ ] DB preload
-  - [ ] Rate limiting workaround
+  - [ ] Rate limiting workaround (Keeps calling once limited)
+  - [ ] Better DB
+  - [ ] Better error handling (Currently if there's a private profile it just returns an empty array)
 - [x] FE MVP
+
+## Features
+
+These are features that would be cool to build
+
+- [ ] User profile
+- [ ] Generation Fight (Figure out what generation you belong to by games you play)
+- [ ] Hall of shame (Games you have never played)
+- [ ] Cost of games (How much money you have spent on games)
+  - [ ] Time you like to buy games (When you buy games)

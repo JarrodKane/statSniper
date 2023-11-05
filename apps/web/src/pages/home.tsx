@@ -11,7 +11,9 @@ import { BASE_URL } from "@/constants";
 import { useState } from "react";
 import { UserGameStats } from 'shared-types';
 import GameTable from "../components/GameTable";
+import { getTotalHours } from "../lib/utils";
 
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 const Home = () => {
@@ -58,7 +60,23 @@ const Home = () => {
           <ProfileForm callBack={handleSubmitSteamId} loading={loading} />
         </CardContent>
       </Card>
-      <GameTable gamesData={gameData} loading={loading} />
+      {gameData.steam && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Steam Stats</CardTitle>
+            {/* <CardDescription> */}
+            <div className='flex gap-3'>
+              Total Play Time: {loading ? <Skeleton className="w-[100px] h-[20px] rounded-full" /> : getTotalHours(gameData.steam.totalPlayTime)}
+            </div>
+            {/* </CardDescription> */}
+          </CardHeader>
+          <CardContent>
+            <GameTable games={gameData.steam.games} loading={loading} />
+          </CardContent>
+        </Card>
+      )
+      }
+
     </>
   );
 };

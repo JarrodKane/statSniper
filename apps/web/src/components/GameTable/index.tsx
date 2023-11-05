@@ -1,42 +1,22 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./columns";
 
-import { UserGameStats } from 'shared-types';
+import { UserGameData } from 'shared-types';
 
 type GameTableProps = {
-  gamesData: UserGameStats;
+  games: UserGameData[];
   loading?: boolean;
 };
 
-const GameTable: React.FC<GameTableProps> = ({ gamesData, loading }) => {
-  if (!gamesData.steam) {
+const GameTable: React.FC<GameTableProps> = ({ games, loading }) => {
+  if (!games) {
     return (
-      <>
-        <DataTable columns={columns} data={[]} />
-      </>
+      <DataTable columns={columns} data={[]} />
     );
   }
 
-  const { totalPlayTime, games } = gamesData.steam
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Steam Stats</CardTitle>
-        <CardDescription>
-          Total Play Time: {totalPlayTime}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <DataTable columns={columns} data={games} loading={loading} />
-      </CardContent>
-    </Card>
+    <DataTable columns={columns} data={games} loading={loading} />
   );
 };
 
