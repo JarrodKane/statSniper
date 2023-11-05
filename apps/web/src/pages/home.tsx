@@ -60,23 +60,17 @@ const Home = () => {
           <ProfileForm callBack={handleSubmitSteamId} loading={loading} />
         </CardContent>
       </Card>
-      {gameData.steam && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Steam Stats</CardTitle>
-            {/* <CardDescription> */}
-            <div className='flex gap-3'>
-              Total Play Time: {loading ? <Skeleton className="w-[100px] h-[20px] rounded-full" /> : getTotalHours(gameData.steam.totalPlayTime)}
-            </div>
-            {/* </CardDescription> */}
-          </CardHeader>
-          <CardContent>
-            <GameTable games={gameData.steam.games} loading={loading} />
-          </CardContent>
-        </Card>
-      )
-      }
-
+      <Card>
+        <CardHeader>
+          <CardTitle>Steam Stats</CardTitle>
+          <div className='flex gap-3'>
+            Total Play Time: {loading ? <Skeleton className="w-[100px] h-[20px] rounded-full" /> : getTotalHours(gameData?.steam?.totalPlayTime || 0)}
+          </div>
+        </CardHeader>
+        <CardContent>
+          <GameTable games={gameData?.steam?.games} loading={loading} />
+        </CardContent>
+      </Card>
     </>
   );
 };
