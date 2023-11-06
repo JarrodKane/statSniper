@@ -74,7 +74,11 @@ export const getOwnedGames = async (steamId: string) => {
       totalPlayTime += game?.playtime_forever || 0;
       gameList.push(currentGame);
     }
-    const stats = { totalPlayTime, games: gameList };
+    const stats = {
+      totalPlayTime,
+      totalGames: usersOwnedGames.game_count,
+      games: gameList,
+    };
     return stats;
   } catch (error) {
     console.error(error);

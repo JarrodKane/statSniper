@@ -63,8 +63,13 @@ const Home = () => {
       <Card>
         <CardHeader>
           <CardTitle>Steam Stats</CardTitle>
-          <div className='flex gap-3'>
-            Total Play Time: {loading ? <Skeleton className="w-[100px] h-[20px] rounded-full" /> : getTotalHours(gameData?.steam?.totalPlayTime || 0)}
+          <div className='flex flex-col gap-3'>
+            <span>
+              Total Play Time: {loading ? <Skeleton className="w-[100px] h-[20px] rounded-full" /> : getTotalHours(gameData?.steam?.totalPlayTime || 0)}
+            </span>
+            <span>
+              Total Games: {gameData?.steam?.totalGames}
+            </span>
           </div>
         </CardHeader>
         <CardContent>

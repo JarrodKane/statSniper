@@ -35,8 +35,8 @@ export const GameController = () => {
 
     for (const appId of appIds) {
       try {
-        // We need to wait 2 seconds between each request to avoid getting rate limited
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        // We need to wait 1.5 seconds between each request to avoid getting rate limited
+        await new Promise((resolve) => setTimeout(resolve, 1500));
         const game = await getGame(appId);
 
         // This is just a sneaky way to try and go through a large list of games without getting rate limited, and work around what happens when we do get rate limited

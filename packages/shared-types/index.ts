@@ -28,6 +28,7 @@ export type UserGameData = SteamGameUserData & {
 export type UserGameStats = {
   [key: string]: {
     totalPlayTime: number;
+    totalGames: number;
     games: UserGameData[];
   };
 };

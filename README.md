@@ -39,6 +39,8 @@ We could also have lots of improvements by storing the users_games so that we do
 '/v1/user/create'
 Creates a user in the database - It then fetches that users owned games from steam, and grabs the game data that is in our database
 
+###### Steam AppData
+
 '/v1/steam/apps/:steamId'
 Gets the list of games of a user, then will fetch the additional game info and insert that into our database.
 Currently if it hits a rate limit it'll wait 5 mins before resuming, there's also a 2 second wait before calling the steam store.
@@ -47,7 +49,11 @@ We don't want to be doing this when a user tries to search for their games, the 
 
 There are a huge amount of apps to be found at, but for now I've opted to get the majority of games from user searches
 `https://api.steampowered.com/IStoreService/GetAppList/v1/?key=${apiKey}&include_games=true`
-'https://api.steampowered.com/ISteamApps/GetAppList/v2/'
+`https://api.steampowered.com/ISteamApps/GetAppList/v2/`
+
+I think it's worth checking out 3rd party apis for this, as they may have better data, and be easier to work with to get the store data
+https://steamapis.com/
+https://steamdb.info/
 
 #### Postman
 
