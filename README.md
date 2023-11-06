@@ -129,6 +129,9 @@ These are features that would be cool to build
 - [ ] Generation Fight (Figure out what generation you belong to by games you play)
 - [ ] Hall of shame (Games you have never played)
 - [ ] Cost of games (How much money you have spent on games)
-  - [ ] Time you like to buy games (When you buy games)
+- [ ] Buying habits (When you buy games the most is it seasonal etc)
+- [ ] Favorite Genres
+- [ ] Compare to friends
+  - [ ] Compare and find games you can play together
 - [ ] Better DB
 - [ ] Hosting
