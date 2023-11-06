@@ -8,10 +8,10 @@ type GameTableProps = {
   loading?: boolean;
 };
 
-const GameTable: React.FC<GameTableProps> = ({ games, loading }) => {
+const GameTable: React.FC<GameTableProps> = ({ games, loading, }) => {
   if (!games) {
     return (
-      <DataTable columns={columns} data={[]} />
+      <DataTable columns={columns} data={[]} loading={loading} />
     );
   }
 

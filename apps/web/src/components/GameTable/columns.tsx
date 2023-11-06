@@ -5,7 +5,7 @@ import { ICON_URL } from '@/constants';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { UserGameData } from 'shared-types';
-import { convertTimeStamp, getTotalHours } from '../../lib/utils';
+import { getTotalHours } from '../../lib/utils';
 
 export const columns: ColumnDef<UserGameData>[] = [
   {
@@ -48,12 +48,8 @@ export const columns: ColumnDef<UserGameData>[] = [
     },
   },
   {
-    accessorKey: 'rtime_last_played',
-    header: 'Last Played',
-    cell: ({ row }) => {
-      const formattedTime = convertTimeStamp(row.getValue('rtime_last_played'));
-      return <span className=" font-medium pr-3">{formattedTime}</span>;
-    },
+    accessorKey: 'metacritic',
+    header: 'metacritic',
   },
   {
     accessorKey: 'release_date',

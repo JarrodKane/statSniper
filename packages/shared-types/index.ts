@@ -7,13 +7,22 @@ export type SteamGameUserData = {
   playtime_windows_forever: number;
   playtime_mac_forever: number;
   playtime_linux_forever: number;
-  rtime_last_played: number;
+  rtime_last_played: number | undefined;
   has_leaderboards: boolean;
   playtime_disconnected: number;
 };
 
+export type SteamOwnedGamesData = {
+  response: {
+    game_count: number;
+    games: SteamGameUserData[];
+  };
+};
+
 export type UserGameData = SteamGameUserData & {
   release_date?: string;
+  metacritic?: number;
+  price?: number;
 };
 
 export type UserGameStats = {

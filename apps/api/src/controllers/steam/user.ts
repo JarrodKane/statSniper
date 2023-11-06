@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
+import * as SharedTypes from 'shared-types';
 import { getGameByAppId } from '../../database/dbQueries';
 import * as Types from '../../types';
 import { GameController } from '../steam/game';
@@ -34,16 +35,17 @@ export const getPlayerStats = async (req: Request, res: Response) => {
  * which would eliminate the need to fetch and calculate the data each time.
  *
  * @param {number} steamId - The Steam ID of the user.
- * @returns {Promise<{steam: Types.UserGameStats}>} - A Promise that resolves to an object with a key of "steam" and a value of type `Types.UserGameStats`.
+ * @returns {Promise<{steam: SharedTypes.UserGameStats}>} - A Promise that resolves to an object with a key of "steam" and a value of type `Types.UserGameStats`.
  *
  */
 export const getOwnedGames = async (steamId: string) => {
   const apiKey = process.env.STEAM_API_KEY;
+  let rateLimited = false;
 
   const url = `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId}&include_appinfo=true&format=json`;
 
   try {
-    const response = await axios.get<Types.SteamOwnedGamesData>(url);
+    const response = await axios.get<SharedTypes.SteamOwnedGamesData>(url);
 
     if (
       response.data.response.game_count === 0 ||
@@ -58,26 +60,43 @@ export const getOwnedGames = async (steamId: string) => {
     let totalPlayTime = 0;
 
     for (const game of usersOwnedGames.games) {
-      const currentGame: Types.UserGameData = game;
+      const currentGame: SharedTypes.UserGameData = game;
       // This is getting additional data on games like release date
       const gameData: Types.GameData[] = await getGameByAppId(game.appid);
+      const gameInDatabase = gameData.length !== 0;
 
-      if (!gameData || gameData.length === 0) {
+      if (gameInDatabase) {
+        currentGame.release_date = gameData[0]?.release_date || '';
+        currentGame.metacritic = gameData[0]?.metacritic || 0;
+        currentGame.price = gameData[0]?.price || 0;
+        currentGame.rtime_last_played = game?.rtime_last_played;
+      }
+
+      // If we don't have the game in our database, and we are not rate limited, we want to try to get the data
+      if (!rateLimited && !gameInDatabase) {
         try {
+          // Trying to avoid rate limits
+          await new Promise((resolve) => setTimeout(resolve, 500));
           const appData = await GameController.getGame(game.appid);
+
           if ('error' in appData) {
-            // If there is no data for the game, we still want to add it to the database so we don't call it again
-          } else if ('release_date' in appData) {
+            console.log('Rate limited');
+            rateLimited = true;
+          } else if (
+            'release_date' in appData &&
+            'metacritic' in appData &&
+            'price_overview' in appData
+          ) {
             currentGame.release_date = appData.release_date.date || '';
+            currentGame.metacritic = appData.metacritic.score || 0;
+            currentGame.price = appData.price_overview.final || 0;
+            currentGame.rtime_last_played = game?.rtime_last_played;
           }
         } catch (error) {
           console.error('No data could be retrieved for that game');
         }
-      } else {
-        if ('release_date' in gameData[0] && gameData[0].release_date) {
-          currentGame.release_date = gameData[0].release_date;
-        }
       }
+
       totalPlayTime += game?.playtime_forever || 0;
       gameList.push(currentGame);
     }

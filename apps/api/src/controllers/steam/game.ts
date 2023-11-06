@@ -6,6 +6,13 @@ type GameResult =
   | Types.SteamAppDetailsResponse['data']['data']
   | { error: string };
 
+type ErrorResponse = {
+  response: {
+    status: string;
+    message: string;
+  };
+};
+
 /**
  * GameController is an object that contains methods for fetching and manipulating game data.
  * Right now it only really grabs a game
@@ -43,8 +50,9 @@ export const GameController = {
             name: gameData?.name,
             release_date: gameData?.release_date.date || '',
             image: gameData?.header_image || '',
+            metacritic: gameData?.metacritic?.score || 0,
+            price: gameData?.price_overview?.final || 0,
           });
-          console.log('Game inserted into database');
           return gameData;
         } else {
           // Steam has apps that have no data, we still want to insert them into the database so we don't call them again
@@ -54,6 +62,8 @@ export const GameController = {
             name: '',
             release_date: '',
             image: '',
+            metacritic: 0,
+            price: 0,
           });
 
           return gameData;
@@ -63,8 +73,12 @@ export const GameController = {
         return { error: 'No Data' };
       }
     } catch (error) {
-      console.error(error);
-      return { error: 'No Data' };
+      if (typeof error === 'object' && error !== null && 'response' in error) {
+        const errResponse = error as ErrorResponse;
+        console.error(errResponse.response);
+        return { error: errResponse.response.status };
+      }
+      return { error: 'An unknown error occurred' };
     }
   },
 };

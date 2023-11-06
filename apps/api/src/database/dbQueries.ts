@@ -106,10 +106,18 @@ export const insertGame = async (
   gameData: Omit<Types.GameData, 'id'>
 ): Promise<string> => {
   return new Promise((resolve, reject) => {
-    const { app_id, provider_id, name, release_date, image } = gameData;
+    const {
+      app_id,
+      provider_id,
+      name,
+      release_date,
+      image,
+      metacritic,
+      price,
+    } = gameData;
     db.run(
-      'INSERT OR IGNORE INTO game (app_id, provider_Id, name, release_date, image) VALUES (?, ?, ?, ?, ?)',
-      [app_id, provider_id, name, release_date, image],
+      'INSERT OR IGNORE INTO game (app_id, provider_Id, name, release_date, image, metacritic, price) VALUES (?, ?, ?, ?, ?, ? ,?)',
+      [app_id, provider_id, name, release_date, image, metacritic, price],
       (err) => {
         if (err) {
           console.error('Error inserting game data:', err);

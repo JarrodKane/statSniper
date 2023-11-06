@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import NodeCache from 'node-cache';
+import * as SharedTypes from 'shared-types';
 import { PROVIDERS_DICTIONARY } from '../../constants/providers';
 import {
   getUserProviders,
   insertUser,
   insertUserProvider,
 } from '../../database/dbQueries';
-import * as Types from '../../types';
 import * as steam from '../steam';
 
 const usersCache = new NodeCache();
@@ -32,7 +32,7 @@ const userController = {
     const userIdPart = steamId.split('=')[1];
     const cacheKey = `user_${userIdPart}`;
     if (usersCache) {
-      const cachedUser = usersCache.get<Types.UserGameData[]>(cacheKey);
+      const cachedUser = usersCache.get<SharedTypes.UserGameData[]>(cacheKey);
       if (cachedUser) {
         res.status(200).json(cachedUser);
       }
@@ -56,7 +56,7 @@ const userController = {
     const cacheKey = `userCreate_${steamId}`;
 
     if (usersCache) {
-      const cachedUser = usersCache.get<Types.UserGameData[]>(cacheKey);
+      const cachedUser = usersCache.get<SharedTypes.UserGameData[]>(cacheKey);
       if (cachedUser) {
         return res.status(200).json(cachedUser);
       }
@@ -91,7 +91,7 @@ const userController = {
   updateUser: async (steamId: string) => {
     const userProviders = await getUserProviders(steamId);
 
-    const games: Types.UserGameStats = {
+    const games: SharedTypes.UserGameStats = {
       steam: { totalPlayTime: 0, games: [] },
     };
 

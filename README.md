@@ -88,7 +88,7 @@ pnpm build
 - [x] API MVP
   - [ ] Cache
   - [ ] DB preload
-  - [ ] Rate limiting workaround (Keeps calling once limited)
+  - [x] Rate limiting workaround (Very basic and not ideal)
   - [ ] Better DB
   - [ ] Better error handling (Currently if there's a private profile it just returns an empty array)
 - [x] FE MVP

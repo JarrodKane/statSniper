@@ -69,6 +69,8 @@ db.run(`
     name TEXT,
     release_date DATE,
     image TEXT,
+    metacritic INTEGER,
+    price INTEGER,
     FOREIGN KEY (provider_id) REFERENCES provider(id)
   )
 `);
