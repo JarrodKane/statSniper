@@ -50,7 +50,9 @@ export function DataTablePagination<TData>({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+        <div className="flex w-[100px] items-center justify-center text-sm font-medium"
+          data-testid='pagination-page-count'
+        >
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount()}
         </div>
@@ -74,6 +76,7 @@ export function DataTablePagination<TData>({
             <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           <Button
+            data-testid='pagination-btn-next'
             variant="outline"
             className="h-8 w-8 p-0"
             onClick={() => table.nextPage()}

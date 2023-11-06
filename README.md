@@ -41,8 +41,11 @@ This is a single page application, originally I had planned to include multiple 
 I've used shadcn because I wanted to use a UI library that I haven't used before and tailwindscss works with it.
 I've tried to keep the components basic and reusable.
 
+Currently I'm only doing some basic component testing with cypress
+
 - [shadcn](https://ui.shadcn.com) for component styling
 - React Vite for development server and bundling
+- Cypress for testing
 
 Both applications are written in [TypeScript](https://www.typescriptlang.org/) for static type checking.
 
@@ -57,6 +60,10 @@ This project uses several tools to help with development:
 - [Turborepo](https://turborepo.org/) for monorepo management.
 - [Vite](https://vitejs.dev/) for development server and bundling.
 - [shadcn](https://ui.shadcn.com) for component styling.
+- [Postman](https://www.postman.com/) for API testing.
+- [Node Cache](https://www.npmjs.com/package/node-cache) for caching data.
+- [SQLite](https://www.sqlite.org/index.html) for database.
+- [Cypress](https://www.cypress.io/) for e2e testing.
 
 ## Running the Project
 
@@ -81,7 +88,7 @@ pnpm build
 
 ## Todo List
 
-- [ ] tests fe
+- [x] tests fe
 - [ ] tests be
 - [x] Postman
 - [ ] Codegen

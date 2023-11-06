@@ -76,7 +76,7 @@ export const getOwnedGames = async (steamId: string) => {
       if (!rateLimited && !gameData) {
         try {
           // Trying to avoid rate limits
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 5000));
           const appData = await GameController.getGame(game.appid);
 
           if ('error' in appData) {
