@@ -102,6 +102,29 @@ export const getGameByAppId = async (
   });
 };
 
+export const getGamesListByAppId = async (
+  appIds: number[]
+): Promise<Types.GameData[]> => {
+  const placeholders = appIds.map(() => '?').join(',');
+
+  return new Promise((resolve, reject) => {
+    const sql = `
+        SELECT *
+        FROM game
+        WHERE game.app_id IN (${placeholders})
+      `;
+
+    db.all(sql, [...appIds], (err, rows: Types.GameData[]) => {
+      if (err) {
+        console.error('Error getting game data:', err);
+        reject('Error getting game data');
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};
+
 export const insertGame = async (
   gameData: Omit<Types.GameData, 'id'>
 ): Promise<string> => {

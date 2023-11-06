@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 import * as SharedTypes from 'shared-types';
-import { getGameByAppId } from '../../database/dbQueries';
+import { getGamesListByAppId } from '../../database/dbQueries';
 import * as Types from '../../types';
 import { GameController } from '../steam/game';
 
@@ -46,7 +46,6 @@ export const getOwnedGames = async (steamId: string) => {
 
   try {
     const response = await axios.get<SharedTypes.SteamOwnedGamesData>(url);
-
     if (
       response.data.response.game_count === 0 ||
       !response.data.response.games
@@ -54,29 +53,30 @@ export const getOwnedGames = async (steamId: string) => {
       console.error('No games found for that user');
       return [];
     }
-
     const usersOwnedGames = response.data.response;
     const gameList = [];
     let totalPlayTime = 0;
 
+    const appIds = usersOwnedGames.games.map((game) => game.appid);
+    const gameDataList: Types.GameData[] = await getGamesListByAppId(appIds);
+
     for (const game of usersOwnedGames.games) {
       const currentGame: SharedTypes.UserGameData = game;
       // This is getting additional data on games like release date
-      const gameData: Types.GameData[] = await getGameByAppId(game.appid);
-      const gameInDatabase = gameData.length !== 0;
+      const gameData = gameDataList.find((data) => data.app_id === game.appid);
 
-      if (gameInDatabase) {
-        currentGame.release_date = gameData[0]?.release_date || '';
-        currentGame.metacritic = gameData[0]?.metacritic || 0;
-        currentGame.price = gameData[0]?.price || 0;
+      if (gameData) {
+        currentGame.release_date = gameData?.release_date || '';
+        currentGame.metacritic = gameData?.metacritic || 0;
+        currentGame.price = gameData?.price || 0;
         currentGame.rtime_last_played = game?.rtime_last_played;
       }
 
       // If we don't have the game in our database, and we are not rate limited, we want to try to get the data
-      if (!rateLimited && !gameInDatabase) {
+      if (!rateLimited && !gameData) {
         try {
           // Trying to avoid rate limits
-          await new Promise((resolve) => setTimeout(resolve, 500));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
           const appData = await GameController.getGame(game.appid);
 
           if ('error' in appData) {

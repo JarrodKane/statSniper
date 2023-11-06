@@ -49,7 +49,22 @@ export const columns: ColumnDef<UserGameData>[] = [
   },
   {
     accessorKey: 'metacritic',
-    header: 'metacritic',
+    header: ({ column }) => {
+      return (
+        <div className="text-right">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Metacritic
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      return <div className="text-right font-medium pr-3">{row.getValue('metacritic')}</div>;
+    },
   },
   {
     accessorKey: 'release_date',
