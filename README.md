@@ -1,9 +1,12 @@
 # Stat Sniper
 
 Stat Sniper is a web application that allows users to sign into Steam and view their game stats. It is built using [Turborepo](https://turborepo.org/) in order to start a monorepo.
+The app is made with the focus on being able to get steam games, but it could be expanded to other platforms.
+It would require some rework, and needs more time put into storing users and their data before it could be expanded.
 
 ## Project Structure
 
+```
 The project is structured as follows:
 ├── apps
 │ ├── api
@@ -12,6 +15,7 @@ The project is structured as follows:
 │ ├── shared-types
 │ └── tsconfig
 └── README.md
+```
 
 This project includes the following applications:
 
@@ -29,6 +33,21 @@ We could also have lots of improvements by storing the users_games so that we do
 - An Express application that serves as the backend for our project. It communicates with the Steam API to fetch user game stats.
 - It uses a simple sqlite database to store user data. (This is not ideal and should be replaced with a better database, if we want to scale this project)
 - Node cache is used to cache user data for 30 mins.
+
+##### API Endpoints
+
+'/v1/user/create'
+Creates a user in the database - It then fetches that users owned games from steam, and grabs the game data that is in our database
+
+'/v1/steam/apps/:steamId'
+Gets the list of games of a user, then will fetch the additional game info and insert that into our database.
+Currently if it hits a rate limit it'll wait 5 mins before resuming, there's also a 2 second wait before calling the steam store.
+This endpoint is really just for development, it's a way to fetch a large list of games that we don't have yet and cycle through them.
+We don't want to be doing this when a user tries to search for their games, the 3rd party api would be hit too often, and would take too long to get the data.
+
+There are a huge amount of apps to be found at, but for now I've opted to get the majority of games from user searches
+`https://api.steampowered.com/IStoreService/GetAppList/v1/?key=${apiKey}&include_games=true`
+'https://api.steampowered.com/ISteamApps/GetAppList/v2/'
 
 #### Postman
 
@@ -75,8 +94,8 @@ pnpm install
 pnpm dev
 ```
 
-Vite frontend will be available at http://localhost:5173
-Express backend will be available at http://localhost:3002
+Vite frontend will be available at [http://localhost:5173](http://localhost:5173)
+Express backend will be available at [http://localhost:3002](http://localhost:3002)
 
 ## Building the Project
 
@@ -93,19 +112,23 @@ pnpm build
 - [x] Postman
 - [ ] Codegen
 - [x] API MVP
-  - [ ] Cache
-  - [ ] DB preload
+
+  - [x] Cache
+  - [x] DB preload
   - [x] Rate limiting workaround (Very basic and not ideal)
-  - [ ] Better DB
-  - [ ] Better error handling (Currently if there's a private profile it just returns an empty array)
+  - [ ] Better error handling
+
 - [x] FE MVP
 
 ## Features
 
 These are features that would be cool to build
 
+- [ ] User login through providers
 - [ ] User profile
 - [ ] Generation Fight (Figure out what generation you belong to by games you play)
 - [ ] Hall of shame (Games you have never played)
 - [ ] Cost of games (How much money you have spent on games)
   - [ ] Time you like to buy games (When you buy games)
+- [ ] Better DB
+- [ ] Hosting

@@ -39,7 +39,7 @@ const userController = {
     }
 
     try {
-      const usersGames = await userController.updateUser(userIdPart);
+      const usersGames = await userController.getUserGames(userIdPart);
       usersCache.set(cacheKey, usersGames, 120);
       return res.status(200).json(usersGames);
     } catch (error) {
@@ -79,8 +79,8 @@ const userController = {
         console.error('Error inserting user provider data');
       }
 
-      const usersGames = await userController.updateUser(steamId);
-      usersCache.set(cacheKey, usersGames, 120);
+      const usersGames = await userController.getUserGames(steamId);
+      usersCache.set(cacheKey, usersGames, 1800);
       return res.status(200).json(usersGames);
     } catch (e) {
       console.error(e);
@@ -88,7 +88,7 @@ const userController = {
     }
   },
 
-  updateUser: async (steamId: string) => {
+  getUserGames: async (steamId: string) => {
     const userProviders = await getUserProviders(steamId);
 
     const games: SharedTypes.UserGameStats = {

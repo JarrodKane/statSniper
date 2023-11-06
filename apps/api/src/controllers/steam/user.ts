@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import * as SharedTypes from 'shared-types';
 import { getGamesListByAppId } from '../../database/dbQueries';
 import * as Types from '../../types';
-import { GameController } from '../steam/game';
+import * as steam from '../steam';
 
 /**
  * Fetches and returns player statistics from the Steam API.
@@ -40,7 +40,6 @@ export const getPlayerStats = async (req: Request, res: Response) => {
  */
 export const getOwnedGames = async (steamId: string) => {
   const apiKey = process.env.STEAM_API_KEY;
-  let rateLimited = false;
 
   const url = `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${steamId}&include_appinfo=true&format=json`;
 
@@ -72,31 +71,6 @@ export const getOwnedGames = async (steamId: string) => {
         currentGame.rtime_last_played = game?.rtime_last_played;
       }
 
-      // If we don't have the game in our database, and we are not rate limited, we want to try to get the data
-      if (!rateLimited && !gameData) {
-        try {
-          // Trying to avoid rate limits
-          await new Promise((resolve) => setTimeout(resolve, 5000));
-          const appData = await GameController.getGame(game.appid);
-
-          if ('error' in appData) {
-            console.log('Rate limited');
-            rateLimited = true;
-          } else if (
-            'release_date' in appData &&
-            'metacritic' in appData &&
-            'price_overview' in appData
-          ) {
-            currentGame.release_date = appData.release_date.date || '';
-            currentGame.metacritic = appData.metacritic.score || 0;
-            currentGame.price = appData.price_overview.final || 0;
-            currentGame.rtime_last_played = game?.rtime_last_played;
-          }
-        } catch (error) {
-          console.error('No data could be retrieved for that game');
-        }
-      }
-
       totalPlayTime += game?.playtime_forever || 0;
       gameList.push(currentGame);
     }
@@ -105,5 +79,38 @@ export const getOwnedGames = async (steamId: string) => {
   } catch (error) {
     console.error(error);
     return [];
+  }
+};
+
+export const getMissingOwnedGames = async (req: Request, res: Response) => {
+  const { steamId } = req.params;
+  const userIdPart = steamId.split('=')[1];
+  const apiKey = process.env.STEAM_API_KEY;
+  const steamController = steam.game.GameController();
+
+  const url = `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${userIdPart}&include_appinfo=true&format=json`;
+
+  try {
+    const response = await axios.get<SharedTypes.SteamOwnedGamesData>(url);
+    if (
+      response.data.response.game_count === 0 ||
+      !response.data.response.games
+    ) {
+      console.error('No games found for that user');
+      return [];
+    }
+
+    const usersOwnedGames = response.data.response;
+    const appIds = usersOwnedGames.games.map((game) => game.appid);
+    const gameDataList: Types.GameData[] = await getGamesListByAppId(appIds);
+    // filter out the games that have been returned from the db we don't care about them
+    const missingAppIds = appIds.filter(
+      (appId) => !gameDataList.find((data) => data.app_id === appId)
+    );
+
+    const missingGames = await steamController.getListOfGames(missingAppIds);
+    res.json(missingGames);
+  } catch (error) {
+    res.json(error);
   }
 };

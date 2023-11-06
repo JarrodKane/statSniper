@@ -16,16 +16,12 @@ export const createServer: () => Express = () => {
   // Creating the base user
   app.post('/v1/user/create', userController.createUser);
 
-  // Now I just pass the steamId, originally I was thinking of making a special id for each user but that's not needed
-  app.get('/v1/user/:steamId', userController.getUserById);
+  // We use this to grab the users games from steam and put them in
+  app.get('/v1/steam/apps/:steamId', steam.user.getMissingOwnedGames);
 
   // TODO: Implement this to get the users steamId from the database
-  // If the user does not have their steamId they can use the steamOpenAi to authenticate themselves and log in that way to get it
-  app.get('/v1/auth/steam', steam.auth.getSteamId);
-  app.get('/v1/auth/steam/authenticate', steam.auth.redirect);
-
-  // This was an idea to fetch all games and store them, it'll take too long for now
-  // fetchAndInsertSteamAppsIntoDatabase();
+  // app.get('/v1/auth/steam', steam.auth.getSteamId);
+  // app.get('/v1/auth/steam/authenticate', steam.auth.redirect);
 
   return app;
 };
