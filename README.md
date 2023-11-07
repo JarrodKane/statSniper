@@ -92,6 +92,14 @@ This project uses several tools to help with development:
 
 ## Running the Project
 
+### ENV Variables
+
+You need to add in a .env file into your apps/api folder with the following variables
+
+```
+STEAM_API_KEY=********
+```
+
 Developing the Project
 To start development servers for all applications, navigate to the root directory of the project and run the following command:
 
